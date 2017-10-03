@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./main.css">
+    <title>iTunes</title>
+</head>
+<body>
+
+    <form action=""></form>
+    <fieldset id="fieldset">
+        <label class="search" for="artistSearch">zoekfunctie:</label>
+        <input type="text" id="artistSearch" value="" placeholder="Geef de naam van de artiest in">
+    </fieldset>
+      
+    <button class="btn btn-primary" type="button" id="confirm">Bevestig</button>
+    
+
+
+
+
+
+
+    <div class="searchResults"></div>
+
+
+    
+    <script>
+
+function getJSONPByCallbacks(url, successHandler, errorHandler){
+    var name = 'jsonp' + new Date().getTime();
+    if (url.match(/\?/)) url += '&callback='+name;
+    else url += '?callback='+name;
+
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+
+    window[name] = function(data){
+        document.getElementsByTagName('head')[0].removeChild(script);
+        script = null;
+        delete window[name];
+
+        successHandler && successHandler(data);
+    };
+
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+var elSearch = document.getElementById('artistSearch');
+var btnConfirm = document.getElementById('confirm');
+btnConfirm.onclick = function() {
+        var artistNameElement = elSearch.value;
+        console.log(artistNameElement)
+
+
+    getJSONPByCallbacks(
+        `'https://itunes.apple.com/search?term=${artistNameElement}&entity=album'`, 
+        function(data) {
+            
+    
+            
+        for(var i = 0; i<data.results.length; i++){
+
+            var searchResultsElement = document.querySelector('.searchResults');
+            var tempStr = '';
+            var i;
+            var result = data.results[i];
+
+            
+            tempStr += 
+    `       
+            <div class="album">
+            <img src="${result.artworkUrl100}" alt="album"> <br>
+            <div class="text">
+                <span class="albumname"> ${result.collectionName} </span> <br>
+                <span class="artist"> ${result.artistName} </span> <br>
+            </div>    
+            </div
+    ` 
+            searchResultsElement.innerHTML += tempStr;
+
+        
+        }
+
+        },
+        function(error) {
+            console.log(error);
+        }
+    );
+
+};
+
+/* getJSONPByCallbacks(
+    'https://itunes.apple.com/search?term=coldplay&entity=album',
+    function(data) {
+        console.log(data);
+        var searchResultsElement = document.querySelector('.searchResults');
+        var tempStr = '';
+        var albums = data.results
+        tempStr += 
+        albums.forEach(function(albumName) {
+                console.log(albumName.properties.collectionName);
+                tempStr += `
+        <div class="album">
+        <h3>${albumName.properties.collectionName}</h3>
+       
+        </div>
+                `;
+            }, this);
+
+        searchResultsElement.innerHTML += tempStr;
+    },
+    function(error) {
+        console.log(error);
+    }
+);
+*/
+</script>
+        
+</body>
+</html>

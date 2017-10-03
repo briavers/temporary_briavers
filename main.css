@@ -1,0 +1,42 @@
+.searchResults{
+    margin: 12px;
+    
+}
+
+.album{
+    
+    float: left;
+ 
+    margin: 1%;
+    width: 180px;
+    height: 180px;
+    text-align: center;
+
+}
+
+img{
+    height: 180px;
+    opacity: 0.3;
+    transition: 0.5s;
+}
+.text{
+    color: black;
+    
+    font-weight: bold;
+    width: 160px;
+    opacity: 1;
+    margin: -110px auto;
+    transition: 0.5s;
+    z-index: 999
+   }
+   
+img:hover{
+    opacity: 1;
+    transition: 0.5s;
+}
+
+.album:hover .text{
+    opacity: 0;
+    transition: 0.5s;
+}
+
