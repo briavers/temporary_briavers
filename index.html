@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./main.css">
-    <title>iTunes</title>
+    <title>iTunes met search</title>
 </head>
 <body>
 
@@ -13,111 +13,108 @@
     <fieldset id="fieldset">
         <label class="search" for="artistSearch">zoekfunctie:</label>
         <input type="text" id="artistSearch" value="" placeholder="Geef de naam van de artiest in">
-    </fieldset>
-      
-    <button class="btn btn-primary" type="button" id="confirm">Bevestig</button>
     
-
-
-
-
-
-
+    
+    <button class="btn btn-primary" type="button" id="confirm">Bevestig</button>
+</fieldset>
+    
     <div class="searchResults"></div>
 
-
     
-    <script>
+<script>
 
-function getJSONPByCallbacks(url, successHandler, errorHandler){
-    var name = 'jsonp' + new Date().getTime();
-    if (url.match(/\?/)) url += '&callback='+name;
-    else url += '?callback='+name;
 
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
+    //make the enter key work 
+    document.getElementById("artistSearch")
+    .addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 13) {
+        document.getElementById("confirm").click();
+    }
+});
 
-    window[name] = function(data){
-        document.getElementsByTagName('head')[0].removeChild(script);
-        script = null;
-        delete window[name];
+    function getJSONPByCallbacks(url, successHandler, errorHandler){
+        var name = 'jsonp' + new Date().getTime();
+        if (url.match(/\?/)) url += '&callback='+name;
+        else url += '?callback='+name;
 
-        successHandler && successHandler(data);
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+
+        window[name] = function(data){
+            document.getElementsByTagName('head')[0].removeChild(script);
+            script = null;
+            delete window[name];
+
+            successHandler && successHandler(data);
+        };
+
+        document.getElementsByTagName('head')[0].appendChild(script);
+    }
+
+    var elSearch = document.getElementById('artistSearch');
+    var btnConfirm = document.getElementById('confirm');
+    btnConfirm.onclick = function() {
+            
+            //the artist string
+            var artistNameElement = elSearch.value;
+
+            //remove space
+            artistNameElement = artistNameElement.replace(/\s/g, '');
+
+            //make string lower
+            artistNameElement = artistNameElement.toLowerCase();
+            
+            console.log(artistNameElement)
+            var searchResultsElement = document.querySelector('.searchResults');
+            var albumCheckElement = document.querySelectorAll('.album')
+
+
+    //check if there is an earlier search an removes it
+
+        for(var i = 0; i<albumCheckElement.length; i++){
+            var elem = albumCheckElement[i]
+            elem.remove();
+        }
+    
+        getJSONPByCallbacks(
+            `https://itunes.apple.com/search?term=${artistNameElement}&entity=album`,
+            function(data) {
+                
+            
+                
+            for(var i = 0; i<data.results.length; i++){
+
+            
+                var tempStr = '';
+                var i;
+                var result = data.results[i];
+
+                
+                tempStr += 
+        `       
+                <div class="album">
+                <img src="${result.artworkUrl100}" alt="album"> <br>
+                <div class="text">
+                    <span class="albumname"> ${result.collectionName} </span> <br>
+                    <span class="artist"> ${result.artistName} </span> <br>
+                </div>    
+                </div
+        ` 
+                searchResultsElement.innerHTML += tempStr;
+
+            
+            }
+
+            },
+            function(error) {
+                console.log(error);
+            }
+        );
+    //aflsuiting btn functie
     };
 
-    document.getElementsByTagName('head')[0].appendChild(script);
-}
-
-var elSearch = document.getElementById('artistSearch');
-var btnConfirm = document.getElementById('confirm');
-btnConfirm.onclick = function() {
-        var artistNameElement = elSearch.value;
-        console.log(artistNameElement)
-
-
-    getJSONPByCallbacks(
-        `'https://itunes.apple.com/search?term=${artistNameElement}&entity=album'`, 
-        function(data) {
-            
-    
-            
-        for(var i = 0; i<data.results.length; i++){
-
-            var searchResultsElement = document.querySelector('.searchResults');
-            var tempStr = '';
-            var i;
-            var result = data.results[i];
-
-            
-            tempStr += 
-    `       
-            <div class="album">
-            <img src="${result.artworkUrl100}" alt="album"> <br>
-            <div class="text">
-                <span class="albumname"> ${result.collectionName} </span> <br>
-                <span class="artist"> ${result.artistName} </span> <br>
-            </div>    
-            </div
-    ` 
-            searchResultsElement.innerHTML += tempStr;
-
-        
-        }
-
-        },
-        function(error) {
-            console.log(error);
-        }
-    );
-
-};
-
-/* getJSONPByCallbacks(
-    'https://itunes.apple.com/search?term=coldplay&entity=album',
-    function(data) {
-        console.log(data);
-        var searchResultsElement = document.querySelector('.searchResults');
-        var tempStr = '';
-        var albums = data.results
-        tempStr += 
-        albums.forEach(function(albumName) {
-                console.log(albumName.properties.collectionName);
-                tempStr += `
-        <div class="album">
-        <h3>${albumName.properties.collectionName}</h3>
-       
-        </div>
-                `;
-            }, this);
-
-        searchResultsElement.innerHTML += tempStr;
-    },
-    function(error) {
-        console.log(error);
-    }
-);
-*/
 </script>
         
 </body>
