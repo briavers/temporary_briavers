@@ -1,43 +1,37 @@
-.searchResults{
+.searchResults {
     margin: 12px;
-    
 }
 
-.album{
-    
+.album {
     float: left;
- 
     margin: 1%;
     width: 180px;
     height: 180px;
     text-align: center;
-
 }
 
-img{
+img {
     height: 180px;
     opacity: 0.3;
     transition: 0.5s;
 }
-.text{
+
+.text {
     color: black;
-    
     font-weight: bold;
     width: 160px;
     opacity: 1;
     margin: -110px auto;
     transition: 0.5s;
     z-index: 999
-   }
-   
-img:hover{
+}
+
+img:hover {
     opacity: 1;
     transition: 0.5s;
 }
 
-.album:hover .text{
+.album:hover .text {
     opacity: 0;
     transition: 0.5s;
 }
-
-
