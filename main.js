@@ -1,90 +1,79 @@
-//make the enter key work 
-document.getElementById("artistSearch")
-    .addEventListener("keyup", function (event) {
-        event.preventDefault();
-        if (event.keyCode == 13) {
-            document.getElementById("confirm").click();
+
+
+var btnRefresh = document.getElementById('refresh');
+btnRefresh.onclick = function () {
+
+    var monsterCheckElement = document.querySelectorAll('tbody')
+    
+    
+        //check if there is an earlier search an removes it
+    
+        for (var i = 0; i < monsterCheckElement.length; i++) {
+            var elem = monsterCheckElement[i]
+            elem.remove();
         }
-    });
+    console.log("color1")
+    
+    
+    for(var rowCount = 1; rowCount <= 8; rowCount++) {
+        //rij opbouwen
+        for (var colCount = 1; colCount <= 1; colCount++) {
+            var tempStr = '';
+            var tableElement = document.querySelector('.arcade_table')
+            var color1 = Math.round(Math.random())
+            var color2 = Math.round(Math.random())
+            var color3 = Math.round(Math.random())
+            var color4 = Math.round(Math.random())
+            tempStr += 
+            ` 
+            <td class="color${color1}"> </td>
+            <td class="color${color2}"> </td>
+            <td class="color${color3}"> </td>
+            <td class="color${color4}"> </td>
+            <td class="color${color4}"> </td>
+            <td class="color${color3}"> </td>
+            <td class="color${color2}"> </td>
+            <td class="color${color1}"> </td>
+            ` 
+            tableElement.innerHTML += tempStr;
+        };
+        
+    };
+    /*
+    //with colors
+    for(var rowCount = 1; rowCount <= 8; rowCount++) {
+        //rij opbouwen
+        for (var colCount = 1; colCount <= 1; colCount++) {
+            var tempStr = '';
+            var tableElement = document.querySelector('.arcade_table_color')
+            var arr = []
+            function colorSearch(){
+                for(var i = 0; i<12; i++){
+                    colorValue = Math.floor(Math.random() * 255);
+                    arr.push(colorValue);
+                }
 
-function getJSONPByCallbacks(url, successHandler, errorHandler) {
-    var name = 'jsonp' + new Date().getTime();
-    if (url.match(/\?/)) url += '&callback=' + name;
-    else url += '?callback=' + name;
+            };
+            colorSearch();
 
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = url;
 
-    window[name] = function (data) {
-        document.getElementsByTagName('head')[0].removeChild(script);
-        script = null;
-        delete window[name];
-
-        successHandler && successHandler(data);
+            tempStr += 
+            ` 
+            <td style="background-color:rgb(${arr[0]}, ${arr[1]}, ${arr[2]});"> </td>
+            <td style="background-color:rgb(${arr[3]}, ${arr[4]}, ${arr[5]});"> </td>
+            <td style="background-color:rgb(${arr[6]}, ${arr[7]}, ${arr[8]});"> </td>
+            <td style="background-color:rgb(${arr[9]}, ${arr[10]}, ${arr[11]});"> </td>
+            <td style="background-color:rgb(${arr[9]}, ${arr[10]}, ${arr[11]});"> </td>
+            <td style="background-color:rgb(${arr[6]}, ${arr[7]}, ${arr[8]});"> </td>
+            <td style="background-color:rgb(${arr[3]}, ${arr[4]}, ${arr[5]});"> </td>
+            <td style="background-color:rgb(${arr[0]}, ${arr[1]}, ${arr[2]});"> </td>
+          
+            ` 
+            tableElement.innerHTML += tempStr;
+        };
+        
     };
 
-    document.getElementsByTagName('head')[0].appendChild(script);
-}
+    */
 
-var elSearch = document.getElementById('artistSearch');
-var btnConfirm = document.getElementById('confirm');
-btnConfirm.onclick = function () {
-
-    //the artist string
-    var artistNameElement = elSearch.value;
-
-    //remove space
-    artistNameElement = artistNameElement.replace(/\s/g, '');
-
-    //make string lower
-    artistNameElement = artistNameElement.toLowerCase();
-
-    console.log(artistNameElement)
-    var searchResultsElement = document.querySelector('.searchResults');
-    var albumCheckElement = document.querySelectorAll('.album')
-
-
-    //check if there is an earlier search an removes it
-
-    for (var i = 0; i < albumCheckElement.length; i++) {
-        var elem = albumCheckElement[i]
-        elem.remove();
-    }
-
-    getJSONPByCallbacks(
-        `https://itunes.apple.com/search?term=${artistNameElement}&entity=album`,
-        function (data) {
-
-
-
-            for (var i = 0; i < data.results.length; i++) {
-
-
-                var tempStr = '';
-                var i;
-                var result = data.results[i];
-
-
-                tempStr +=
-                    `       
-                <div class="album">
-                <img src="${result.artworkUrl100}" alt="album"> <br>
-                <div class="text">
-                    <span class="albumname"> ${result.collectionName} </span> <br>
-                    <span class="artist"> ${result.artistName} </span> <br>
-                </div>    
-                </div
-        `
-                searchResultsElement.innerHTML += tempStr;
-
-
-            }
-
-        },
-        function (error) {
-            console.log(error);
-        }
-    );
-    //aflsuiting btn functie
 };
